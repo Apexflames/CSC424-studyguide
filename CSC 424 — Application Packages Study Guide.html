@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CSC 424 — Application Packages Study Guide</title>
+<style>
+:root{
+  --bg:#fbfaf7; --panel:#ffffff; --ink:#1c1a17; --ink-soft:#5a5650; --line:#e4e0d8;
+  --accent:#2c5f4e; --accent-soft:#e3ede8; --source:#eef2ea; --source-line:#9db38a;
+  --plain:#eef1f5; --plain-line:#7d93b2; --code:#f3f1eb; --focus:#2c5f4e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12140f; --panel:#191d16; --ink:#eaece5; --ink-soft:#adb3a5; --line:#2c3228;
+    --accent:#7fc4a6; --accent-soft:#1c2921; --source:#1a2417; --source-line:#5f7a4c;
+    --plain:#1a2028; --plain-line:#4c6285; --code:#1e2119;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12140f; --panel:#191d16; --ink:#eaece5; --ink-soft:#adb3a5; --line:#2c3228;
+  --accent:#7fc4a6; --accent-soft:#1c2921; --source:#1a2417; --source-line:#5f7a4c;
+  --plain:#1a2028; --plain-line:#4c6285; --code:#1e2119;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif; line-height:1.55; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);}
+h1,h2,h3,h4{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-weight:700; letter-spacing:-.01em}
+a{color:var(--accent)}
+.brandbar{text-align:center; background:var(--accent); color:#fff; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-weight:800; font-size:12.5px; letter-spacing:.04em; padding:7px 10px; padding-top:calc(7px + env(safe-area-inset-top,0px));}
+.brandbar span{font-weight:400; opacity:.92}
+header{position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line);}
+.hbar{display:flex; align-items:center; gap:10px; padding:10px 16px; max-width:1100px; margin:0 auto; flex-wrap:wrap}
+.hbar .title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-weight:800; font-size:15px; margin-right:auto; white-space:nowrap}
+.hbar .title small{display:block; font-weight:400; font-size:11px; color:var(--ink-soft)}
+#search{flex:1 1 180px; min-width:120px; max-width:320px; padding:7px 10px; border-radius:7px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:14px; font-family:inherit;}
+#search:focus{outline:2px solid var(--focus); outline-offset:1px}
+button.tbtn{border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:7px; padding:7px 10px; font-size:13px; cursor:pointer; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+button.tbtn:focus-visible{outline:2px solid var(--focus)}
+nav.toc{display:flex; gap:6px; overflow-x:auto; padding:0 16px 10px; max-width:1100px; margin:0 auto; -webkit-overflow-scrolling:touch}
+nav.toc a{white-space:nowrap; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:12.5px; text-decoration:none; color:var(--ink-soft); border:1px solid var(--line); padding:5px 10px; border-radius:999px;}
+nav.toc a:hover, nav.toc a:focus-visible{color:var(--accent); border-color:var(--accent)}
+main{max-width:760px; margin:0 auto; padding:22px 16px 80px}
+.hidden{display:none !important}
+.topic{border-top:3px solid var(--accent); padding-top:6px; margin-top:52px; scroll-margin-top:70px}
+.topic:first-child{margin-top:20px}
+.topic h2{font-size:23px; margin:4px 0 2px}
+.topic .kicker{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); font-weight:700}
+h3.sub{font-size:16.5px; margin:30px 0 8px; padding-bottom:5px; border-bottom:1px solid var(--line); scroll-margin-top:70px}
+h4.term{font-size:15px; margin:18px 0 4px}
+p{margin:8px 0}
+ul,ol{margin:8px 0; padding-left:22px}
+li{margin:3px 0}
+.block{border-left:3px solid var(--line); background:var(--panel); padding:10px 14px; border-radius:0 6px 6px 0; margin:10px 0}
+.source{border-left-color:var(--source-line); background:var(--source)}
+.plain{border-left-color:var(--plain-line); background:var(--plain)}
+.label{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; display:block; margin-bottom:4px;}
+.source .label{color:var(--source-line)}
+.plain .label{color:var(--plain-line)}
+table{width:100%; border-collapse:collapse; font-size:14px; margin:12px 0; display:block; overflow-x:auto; white-space:nowrap}
+table thead{display:table-header-group} table tbody{display:table-row-group} table, tr{display:table; width:100%}
+th,td{border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; white-space:normal}
+th{background:var(--code); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:12.5px}
+.revision{background:var(--code); border:1px dashed var(--line); border-radius:8px; padding:12px 16px; margin:14px 0}
+.revision .label{color:var(--accent)}
+.anim{border:1px solid var(--line); border-radius:10px; padding:14px 14px 12px; margin:16px 0; background:var(--panel)}
+.anim-head{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--accent); font-weight:800; margin-bottom:2px}
+.anim-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-weight:700; font-size:14.5px; margin-bottom:10px}
+.anim-stage{display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin-bottom:10px}
+.flow-node{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:12.5px; font-weight:600; border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; background:var(--code); color:var(--ink-soft); transition:all .25s; flex:1 1 100px; text-align:center; min-width:90px;}
+.flow-node.active{border-color:var(--accent); background:var(--accent-soft); color:var(--accent); transform:scale(1.04)}
+.flow-node.done{opacity:.55}
+.flow-arrow{color:var(--ink-soft); font-size:15px; flex:0 0 auto}
+.anim-controls{display:flex; gap:6px; flex-wrap:wrap}
+.anim-controls button{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:12.5px; font-weight:600; border:1px solid var(--line); background:var(--code); color:var(--ink); border-radius:7px; padding:6px 12px; cursor:pointer;}
+.anim-controls button:hover{border-color:var(--accent)}
+.anim-controls button:focus-visible{outline:2px solid var(--focus)}
+.anim-note{font-size:13.5px; margin:10px 0 0; min-height:20px; padding-top:9px; border-top:1px solid var(--line); color:var(--ink);}
+details.qa{border:1px solid var(--line); border-radius:8px; margin:8px 0; background:var(--panel)}
+details.qa > summary{padding:11px 14px; cursor:pointer; font-weight:600; font-size:14.5px; list-style:none; display:flex; gap:8px; align-items:baseline;}
+details.qa > summary::-webkit-details-marker{display:none}
+details.qa > summary::before{content:"▸"; color:var(--accent); flex:0 0 auto; transition:transform .15s}
+details.qa[open] > summary::before{transform:rotate(90deg)}
+details.qa .ans{padding:0 14px 14px; font-size:14.5px}
+.tag{display:inline-block; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:10px; font-weight:700; padding:1px 7px; border-radius:999px; margin-right:6px; vertical-align:middle;}
+.tag.likely{background:var(--accent-soft); color:var(--accent)}
+.ref{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:12px; color:var(--ink-soft); margin-top:8px}
+.ref a{color:var(--ink-soft); text-decoration:underline}
+.note{font-size:12.5px; color:var(--ink-soft); margin:6px 0}
+.bank{font-size:14px}
+.bank h4{margin:20px 0 6px; font-size:14.5px}
+.bank ol{padding-left:20px}
+.bank li{margin:4px 0}
+mark{background:var(--accent-soft); color:var(--ink); border-radius:3px; padding:0 2px}
+footer{max-width:760px; margin:0 auto; padding:20px 16px 50px; font-size:12px; color:var(--ink-soft); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.brandfoot{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); text-align:center; font-size:13px; color:var(--ink)}
+.brandfoot strong{color:var(--accent)}
+#toTop{position:fixed; bottom:calc(18px + env(safe-area-inset-bottom,0px)); right:18px; border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:50%; width:40px; height:40px; cursor:pointer; display:none; font-size:16px}
+#toTop.show{display:block}
+@media (max-width:520px){ .hbar .title{font-size:13px} }
+</style>
+</head>
+<body>
+<div class="brandbar">APEXHUB <span>— your one stop for all academic needs and more</span></div>
+<header>
+  <div class="hbar">
+    <div class="title">CSC 424 Study Guide<small>Application Packages — Dr Ogbeide O.I.</small></div>
+    <input id="search" type="text" placeholder="Search definitions, terms, questions…" aria-label="Search study guide">
+    <button class="tbtn" id="themeBtn" aria-label="Toggle dark mode">🌓 Theme</button>
+  </div>
+  <nav class="toc" aria-label="Topic navigation">
+    <a href="#t1">1. Intro</a><a href="#t2">2. Word</a><a href="#t3">3. Excel</a><a href="#t4">4. PowerPoint</a>
+    <a href="#t5">5. Database</a><a href="#t6">6. SPSS</a><a href="#t7">7. Cloud</a><a href="#t8">8. Graphics</a>
+    <a href="#t9">9. Integration</a><a href="#t10">10. Trends</a><a href="#bank">Exam Bank</a>
+  </nav>
+</header>
+
+<main id="content">
+<p class="note">Content is drawn entirely from your CSC 424 course outline and lecture note document. Boxes marked <strong>Source Material</strong> preserve the note's own wording and structure; <strong>Plain English</strong> boxes are added explanations, not lecturer content.</p>
+
+<!-- T1 -->
+<section class="topic" id="t1">
+<span class="kicker">Topic 1</span>
+<h2>Introduction to Application Packages</h2>
+
+<h3 class="sub" id="t1-def">Meaning of Application Packages</h3>
+<div class="block source"><span class="label">Source Material</span>
+Application packages are computer programs designed to help users perform specific tasks or solve particular problems. Unlike system software, which manages computer hardware and system resources, application packages assist users in activities such as document preparation, data analysis, communication, database management, graphics design, and presentation creation.
+</div>
+<div class="block plain"><span class="label">Plain English</span>
+System software is the engine of the car; application packages are what you actually drive it for — writing a letter, running a budget, editing a photo.
+</div>
+<p><em>Examples:</em> Microsoft Word, Excel, PowerPoint, Access, SPSS, Adobe Photoshop, CorelDRAW, Google Workspace applications.</p>
+
+<h3 class="sub" id="t1-history">Historical Development</h3>
+<div class="block source"><span class="label">Source Material</span>
+Early computers were used for scientific/military applications and required custom programming. Personal computers in the 1970s–80s brought packages like WordStar, Lotus 1-2-3 and dBase, letting ordinary users do office tasks without programming. GUIs then replaced command-line interfaces, and Microsoft Office became one of the most widely used suites. Today, cloud computing and mobile technology have made application packages web-based and mobile-accessible, supporting collaboration and remote work.
+</div>
+
+<h3 class="sub" id="t1-char">Characteristics of Application Packages</h3>
+<div class="block source"><span class="label">Source Material</span>
+User-Friendliness, Task-Specific Functionality (e.g. Excel focuses on numerical computation), Reliability, Integration Capability, Customization, Security Features (password protection, encryption, access control), and Automation (macros, scripts, built-in functions).
+</div>
+
+<h3 class="sub" id="t1-import">Importance of Application Packages</h3>
+<ul>
+<li>Improve productivity — reduce time to complete tasks</li>
+<li>Enhance accuracy — minimize human error</li>
+<li>Facilitate communication — email, presentation, collaboration platforms</li>
+<li>Support decision-making — analysis, forecasting, reporting</li>
+<li>Assist teaching, learning, research and administration in education</li>
+</ul>
+
+<h3 class="sub" id="t1-class">Classification of Application Packages</h3>
+<table><thead><tr><th>Category</th><th>Purpose</th><th>Examples</th></tr></thead><tbody>
+<tr><td>Word Processing</td><td>Creating, editing, formatting, printing documents</td><td>MS Word, Google Docs</td></tr>
+<tr><td>Spreadsheet</td><td>Numerical calculation, financial analysis, data management</td><td>MS Excel, Google Sheets</td></tr>
+<tr><td>Database Management</td><td>Storage, retrieval, management of large data</td><td>MS Access, MySQL Workbench</td></tr>
+<tr><td>Presentation</td><td>Preparing visual presentations</td><td>MS PowerPoint, Google Slides</td></tr>
+<tr><td>Graphics</td><td>Image creation and editing</td><td>Adobe Photoshop, CorelDRAW</td></tr>
+<tr><td>Statistical</td><td>Data analysis</td><td>SPSS, R, Stata</td></tr>
+<tr><td>Accounting</td><td>Financial record keeping</td><td>QuickBooks, Sage</td></tr>
+<tr><td>Communication</td><td>Information exchange, collaboration</td><td>Zoom, MS Teams, Slack</td></tr>
+</tbody></table>
+
+<h3 class="sub" id="t1-sysvsapp">System Software vs Application Software</h3>
+<table><thead><tr><th>System Software</th><th>Application Software</th></tr></thead><tbody>
+<tr><td>Controls hardware resources</td><td>Performs user tasks</td></tr>
+<tr><td>Essential for system operation</td><td>Depends on system software</td></tr>
+<tr><td>Runs in background</td><td>Runs when required</td></tr>
+<tr><td>Installed with operating system</td><td>Installed according to user needs</td></tr>
+<tr><td>Examples: Windows, Linux</td><td>Examples: Word, Excel</td></tr>
+</tbody></table>
+<p class="note">System software functions: memory, process, device, file, and security management. Application software functions: document preparation, data analysis, database management, communication, graphics design.</p>
+
+<h3 class="sub" id="t1-install">Installation and Maintenance</h3>
+<div class="anim" id="anim-install">
+<div class="anim-head">Live Animation</div>
+<div class="anim-title">Installing an application package</div>
+<div class="anim-stage"></div>
+<div class="anim-controls"><button data-play>▶ Play</button><button data-step>⏭ Step</button><button data-reset>↺ Reset</button></div>
+<p class="anim-note"></p>
+</div>
+<div class="block source"><span class="label">Source Material</span>
+Maintenance activities: updating software versions, backing up files, scanning for malware, correcting errors, uninstalling obsolete programs. Proper maintenance improves security, functionality and software lifespan.
+</div>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Application packages = task-specific software layered on top of system software. Six key characteristics: user-friendly, task-specific, reliable, integrable, customizable, secure, automatable. Eight classifications by function. Installation = obtain → check requirements → run setup → accept license → select options → complete.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Define Application Packages and distinguish them from System Software.</summary><div class="ans">
+<strong>Answer:</strong> Application packages are programs designed to help users perform specific tasks (e.g. document preparation, data analysis), while system software manages hardware and system resources and provides the platform on which applications run. System software controls hardware and runs in the background; application software performs user tasks and runs when needed.
+<div class="ref">Study Guide Reference: <a href="#t1-def">Topic 1 → Meaning</a>, <a href="#t1-sysvsapp">System vs Application Software</a></div></div></details>
+
+<details class="qa"><summary>List and explain five characteristics of application packages.</summary><div class="ans">
+<strong>Answer:</strong> User-Friendliness (graphical interfaces), Task-Specific Functionality (e.g. Excel for numerical computation), Reliability (consistent results), Integration Capability (exchanging data with other packages), and Automation (macros/scripts/built-in functions).
+<div class="ref">Study Guide Reference: <a href="#t1-char">Topic 1 → Characteristics</a></div></div></details>
+
+<details class="qa"><summary>Classify application packages according to their functions, giving one example of each.</summary><div class="ans">
+<strong>Answer:</strong> Word Processing (MS Word), Spreadsheet (MS Excel), Database Management (MS Access), Presentation (MS PowerPoint), Graphics (Adobe Photoshop), Statistical (SPSS), Accounting (QuickBooks), Communication (Zoom).
+<div class="ref">Study Guide Reference: <a href="#t1-class">Topic 1 → Classification</a></div></div></details>
+</section>
+
+<!-- T2 -->
+<section class="topic" id="t2">
+<span class="kicker">Topic 2</span>
+<h2>Word Processing Applications</h2>
+
+<h3 class="sub" id="t2-def">Introduction &amp; Features</h3>
+<div class="block source"><span class="label">Source Material</span>
+Word processing is the use of computer software to create, edit, format, store, retrieve and print text-based documents. Microsoft Word features: Text Editing, Formatting Tools, Spell Checking, AutoCorrect, Templates, Find and Replace, and Printing Options.
+</div>
+
+<h3 class="sub" id="t2-format">Document Formatting</h3>
+<table><thead><tr><th>Level</th><th>Includes</th></tr></thead><tbody>
+<tr><td>Character Formatting</td><td>Font type, size, color, bold, italics, underline</td></tr>
+<tr><td>Paragraph Formatting</td><td>Alignment, indentation, line spacing, paragraph spacing, bullets/numbering</td></tr>
+<tr><td>Page Formatting</td><td>Margins, orientation, page size, columns, headers/footers</td></tr>
+</tbody></table>
+<p><strong>Styles</strong> are predefined formatting settings ensuring consistency; <strong>Themes</strong> coordinate fonts, colours and effects across a document.</p>
+
+<h3 class="sub" id="t2-merge">Mail Merge</h3>
+<div class="block source"><span class="label">Source Material</span>
+Mail Merge creates multiple personalized documents from a single template, combining a Main Document, a Data Source, and Merge Fields. Example: a university generating admission letters for thousands of students from one template and a student database. Benefits: time savings, accuracy, consistency.
+</div>
+
+<h3 class="sub" id="t2-ref">References and Citations</h3>
+<p>Word provides Citations, Bibliographies, Footnotes, Endnotes, Table of Contents. Supported styles: APA, MLA, Chicago, Harvard. Mendeley is commonly used for automatic citation and referencing.</p>
+
+<h3 class="sub" id="t2-report">Creation of Professional Reports</h3>
+<div class="anim" id="anim-report">
+<div class="anim-head">Live Animation</div>
+<div class="anim-title">Standard report structure</div>
+<div class="anim-stage"></div>
+<div class="anim-controls"><button data-play>▶ Play</button><button data-step>⏭ Step</button><button data-reset>↺ Reset</button></div>
+<p class="anim-note"></p>
+</div>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Word processing = create/edit/format/store/print text documents. Formatting has three levels: character, paragraph, page. Mail Merge = Main Document + Data Source + Merge Fields. Reports follow 8 fixed sections: Title Page → Abstract → TOC → Introduction → Main Body → Conclusion → References → Appendices.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Explain Mail Merge and its three components, with an example.</summary><div class="ans">
+<strong>Answer:</strong> Mail Merge lets a user create multiple personalized documents from one template. It combines a Main Document (the template), a Data Source (e.g. a student database), and Merge Fields (placeholders that pull in each record's data) — e.g. a university generating thousands of individualised admission letters from one template.
+<div class="ref">Study Guide Reference: <a href="#t2-merge">Topic 2 → Mail Merge</a></div></div></details>
+
+<details class="qa"><summary>Differentiate between Character, Paragraph, and Page formatting in Microsoft Word.</summary><div class="ans">
+<strong>Answer:</strong> Character formatting modifies text itself (font, size, colour, bold/italic/underline); Paragraph formatting controls a paragraph's layout (alignment, indentation, spacing, bullets/numbering); Page formatting controls the whole page (margins, orientation, size, columns, headers/footers).
+<div class="ref">Study Guide Reference: <a href="#t2-format">Topic 2 → Document Formatting</a></div></div></details>
+
+<details class="qa"><summary>Outline the standard structure of a professional report.</summary><div class="ans">
+<strong>Answer:</strong> Title Page, Abstract, Table of Contents, Introduction, Main Body, Conclusion, References, Appendices.
+<div class="ref">Study Guide Reference: <a href="#t2-report">Topic 2 → Creation of Professional Reports</a></div></div></details>
+</section>
+
+<!-- T3 -->
+<section class="topic" id="t3">
+<span class="kicker">Topic 3</span>
+<h2>Spreadsheet Applications</h2>
+
+<h3 class="sub" id="t3-comp">Components of Microsoft Excel</h3>
+<table><thead><tr><th>Component</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>Workbook</td><td>An Excel file containing one or more worksheets</td></tr>
+<tr><td>Worksheet</td><td>A grid of rows and columns</td></tr>
+<tr><td>Row / Column</td><td>Horizontal (numbered) / vertical (lettered) grid lines</td></tr>
+<tr><td>Cell</td><td>The intersection of a row and a column</td></tr>
+<tr><td>Formula Bar</td><td>Displays and allows editing of formulas/data</td></tr>
+</tbody></table>
+<p>Excel data types: Text, Numeric, Date and Time, Logical (TRUE/FALSE).</p>
+
+<h3 class="sub" id="t3-formula">Formulas vs Functions</h3>
+<div class="block source"><span class="label">Source Material</span>
+A formula is an expression used to perform calculations, always beginning with "=" (e.g. <code>=A1+B1</code>, <code>=A2*B2</code>). A function is a predefined formula that performs a specific calculation.
+</div>
+<div class="anim" id="anim-functions">
+<div class="anim-head">Live Animation</div>
+<div class="anim-title">Common Excel functions</div>
+<div class="anim-stage"></div>
+<div class="anim-controls"><button data-play>▶ Play</button><button data-step>⏭ Step</button><button data-reset>↺ Reset</button></div>
+<p class="anim-note"></p>
+</div>
+
+<h3 class="sub" id="t3-tools">Charts, Sorting/Filtering, Pivot Tables, What-If Analysis</h3>
+<p><strong>Chart types:</strong> Column, Bar, Pie, Line, Area, Scatter. <strong>Sorting:</strong> ascending, descending, alphabetically. <strong>Filtering:</strong> displays only records meeting specified conditions.</p>
+<div class="block source"><span class="label">Source Material</span>
+A Pivot Table is an advanced feature for summarizing and analysing large amounts of data — grouping information, calculating totals, comparing categories, and generating reports. What-If Analysis predicts outcomes by changing input values, using Goal Seek, Scenario Manager, and Data Tables.
+</div>
+
+<h3 class="sub" id="t3-fin">Financial and Statistical Calculations</h3>
+<p><strong>Financial:</strong> loan repayment analysis, interest computation, investment evaluation, budget planning. <strong>Statistical:</strong> mean, median, mode, standard deviation, variance, correlation analysis.</p>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Workbook → Worksheet → Cell hierarchy. Formulas start with "="; functions are predefined formulas (SUM, AVERAGE, MAX, MIN, COUNT, IF). Pivot Tables summarize large datasets; What-If Analysis (Goal Seek, Scenario Manager, Data Tables) predicts outcomes.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Differentiate between a formula and a function in Excel, giving an example of each.</summary><div class="ans">
+<strong>Answer:</strong> A formula is a user-written expression for a calculation, always starting with "=" (e.g. <code>=A1+B1</code>). A function is a predefined, built-in formula for a specific calculation (e.g. <code>=SUM(A1:A10)</code>).
+<div class="ref">Study Guide Reference: <a href="#t3-formula">Topic 3 → Formulas vs Functions</a></div></div></details>
+
+<details class="qa"><summary>What is a Pivot Table used for, and what is What-If Analysis?</summary><div class="ans">
+<strong>Answer:</strong> A Pivot Table summarizes and analyses large datasets — grouping data, calculating totals, comparing categories, generating reports. What-If Analysis predicts outcomes by changing input values, using tools such as Goal Seek, Scenario Manager, and Data Tables — used for budgeting, forecasting, and strategic planning.
+<div class="ref">Study Guide Reference: <a href="#t3-tools">Topic 3 → Charts, Sorting/Filtering, Pivot Tables, What-If Analysis</a></div></div></details>
+
+<details class="qa"><summary>List the components of the Microsoft Excel environment.</summary><div class="ans">
+<strong>Answer:</strong> Workbook (the file), Worksheet (a grid of rows and columns), Row, Column, Cell (intersection of a row and column), and the Formula Bar (displays/edits formulas and data).
+<div class="ref">Study Guide Reference: <a href="#t3-comp">Topic 3 → Components of Microsoft Excel</a></div></div></details>
+</section>
+
+<!-- T4 -->
+<section class="topic" id="t4">
+<span class="kicker">Topic 4</span>
+<h2>Presentation Packages</h2>
+
+<h3 class="sub" id="t4-def">Introduction</h3>
+<div class="block source"><span class="label">Source Material</span>
+Presentation software creates, organises and displays information visually to an audience, combining text, images, charts, animations, audio and video into slides. Examples: Microsoft PowerPoint, Google Slides, Apple Keynote, LibreOffice Impress, Prezi, Canva Presentation.
+</div>
+<p><em>PowerPoint environment components:</em> Title Bar, Ribbon (Home, Insert, Design, Transitions, Animations, Slide Show, Review, View), Slides Pane, Slide Workspace, Notes Section, Status Bar.</p>
+
+<h3 class="sub" id="t4-create">Creating a Presentation</h3>
+<div class="anim" id="anim-present">
+<div class="anim-head">Live Animation</div>
+<div class="anim-title">Building an effective presentation</div>
+<div class="anim-stage"></div>
+<div class="anim-controls"><button data-play>▶ Play</button><button data-step>⏭ Step</button><button data-reset>↺ Reset</button></div>
+<p class="anim-note"></p>
+</div>
+
+<h3 class="sub" id="t4-design">Slide Design Principles</h3>
+<div class="block source"><span class="label">Source Material</span>
+Simplicity, Consistency, Readability, Contrast, Balance, Relevance, White Space.
+</div>
+
+<h3 class="sub" id="t4-anim">Animation vs Transition</h3>
+<table><thead><tr><th>Animation</th><th>Transition</th></tr></thead><tbody>
+<tr><td>Effect applied to an object <em>within</em> a slide (entrance, emphasis, exit, motion path)</td><td>Effect applied <em>between</em> two slides (fade, push, wipe, split, morph)</td></tr>
+</tbody></table>
+<p class="note">Excessive animation/transitions may distract the audience — it is advisable to use little or none in most professional presentations.</p>
+
+<h3 class="sub" id="t4-delivery">Delivery Techniques</h3>
+<ul>
+<li>Understand the content thoroughly before presenting</li>
+<li>Maintain eye contact with the audience</li>
+<li>Speak clearly, at an appropriate pace</li>
+<li>Use body language, facial expressions and gestures to support the message</li>
+<li>Avoid reading directly from slides</li>
+<li>Handle audience questions professionally and confidently</li>
+<li>Prepare and rehearse to reduce anxiety and improve quality</li>
+</ul>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Presentation = slides combining text/media, delivered to an audience. Design principles: simplicity, consistency, readability, contrast, balance, relevance, white space. Animation = within a slide; Transition = between slides — use sparingly.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Differentiate between Animation and Transition effects in presentation software.</summary><div class="ans">
+<strong>Answer:</strong> Animation effects are applied to objects within a single slide (entrance, emphasis, exit, motion path effects), while Transition effects control how one slide changes to the next (e.g. fade, push, wipe, split, morph).
+<div class="ref">Study Guide Reference: <a href="#t4-anim">Topic 4 → Animation vs Transition</a></div></div></details>
+
+<details class="qa"><summary>State five slide design principles and explain any two.</summary><div class="ans">
+<strong>Answer:</strong> Simplicity, Consistency, Readability, Contrast, Balance, Relevance, White Space. Simplicity means slides should hold only essential information since overcrowding confuses the audience; Contrast means there must be sufficient difference between text and background colour for visibility.
+<div class="ref">Study Guide Reference: <a href="#t4-design">Topic 4 → Slide Design Principles</a></div></div></details>
+
+<details class="qa"><summary>Explain the steps involved in creating an effective presentation.</summary><div class="ans">
+<strong>Answer:</strong> Identify the purpose and target audience; gather and organise relevant information; create and arrange slides logically into an Introduction (topic and objectives), Main Body (key points and supporting information), and Conclusion (summary and closing remarks).
+<div class="ref">Study Guide Reference: <a href="#t4-create">Topic 4 → Creating a Presentation</a></div></div></details>
+</section>
+
+<!-- T5 -->
+<section class="topic" id="t5">
+<span class="kicker">Topic 5</span>
+<h2>Database Management Applications</h2>
+
+<h3 class="sub" id="t5-dbms">DBMS Concepts</h3>
+<div class="block source"><span class="label">Source Material</span>
+A database is an organised collection of related data stored electronically. A Database Management System (DBMS) is software that creates, maintains and controls databases, acting as an interface between users and stored data. Major functions: data storage, retrieval, updating, security, sharing, backup and recovery.
+</div>
+
+<h3 class="sub" id="t5-comp">Components of a Database</h3>
+<table><thead><tr><th>Component</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>Table</td><td>Stores data in rows and columns</td></tr>
+<tr><td>Record</td><td>A complete set of information about one entity (e.g. one student)</td></tr>
+<tr><td>Field</td><td>An individual data item within a record (e.g. Student Name)</td></tr>
+<tr><td>Primary Key</td><td>Uniquely identifies each record in a table</td></tr>
+<tr><td>Relationship</td><td>Connects tables through common fields, reducing duplication</td></tr>
+</tbody></table>
+
+<h3 class="sub" id="t5-access">Microsoft Access Objects</h3>
+<table><thead><tr><th>Object</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Tables</td><td>Storing data</td></tr>
+<tr><td>Queries</td><td>Retrieving and analysing data</td></tr>
+<tr><td>Forms</td><td>User-friendly interfaces for entering/viewing data</td></tr>
+<tr><td>Reports</td><td>Formatted outputs for printing/presentation</td></tr>
+<tr><td>Macros</td><td>Automating repetitive database operations</td></tr>
+</tbody></table>
+
+<h3 class="sub" id="t5-design">Database Design Process</h3>
+<div class="anim" id="anim-dbdesign">
+<div class="anim-head">Live Animation</div>
+<div class="anim-title">Designing a database</div>
+<div class="anim-stage"></div>
+<div class="anim-controls"><button data-play>▶ Play</button><button data-step>⏭ Step</button><button data-reset>↺ Reset</button></div>
+<p class="anim-note"></p>
+</div>
+
+<h3 class="sub" id="t5-sec">Database Security and Backup</h3>
+<p><strong>Security:</strong> password protection, user authentication, access control, data encryption. <strong>Backup</strong> protects against hardware failure, software corruption, cyberattacks, and accidental data loss.</p>
+
+<div class="revision"><span class="label">Quick Revision</span>
+DBMS interfaces users with stored data (store, retrieve, update, secure, share, back up). A database = Tables + Records + Fields + Primary Key + Relationships. Access's five objects: Tables, Queries, Forms, Reports, Macros. Design flows: Requirement Analysis → Table Design → Field Definition → Relationship Design → Data Entry.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Define a DBMS and state its major functions.</summary><div class="ans">
+<strong>Answer:</strong> A DBMS is software that enables users to create, maintain and control databases, serving as the interface between users and stored data. Its major functions: data storage, retrieval, updating, security, sharing, and backup/recovery.
+<div class="ref">Study Guide Reference: <a href="#t5-dbms">Topic 5 → DBMS Concepts</a></div></div></details>
+
+<details class="qa"><summary>Differentiate between a Record and a Field, and explain the role of a Primary Key.</summary><div class="ans">
+<strong>Answer:</strong> A Record is a complete set of information about one entity (e.g. one student's full data), while a Field is a single data item within that record (e.g. just the Student Name). A Primary Key uniquely identifies each record in a table, preventing duplicate or ambiguous entries.
+<div class="ref">Study Guide Reference: <a href="#t5-comp">Topic 5 → Components of a Database</a></div></div></details>
+
+<details class="qa"><summary>List the five main objects in Microsoft Access and their purposes.</summary><div class="ans">
+<strong>Answer:</strong> Tables (store data), Queries (retrieve/analyse data), Forms (user-friendly data entry/viewing), Reports (formatted printable output), Macros (automate repetitive operations).
+<div class="ref">Study Guide Reference: <a href="#t5-access">Topic 5 → Microsoft Access Objects</a></div></div></details>
+</section>
+
+<!-- T6 -->
+<section class="topic" id="t6">
+<span class="kicker">Topic 6</span>
+<h2>Statistical and Data Analysis Packages</h2>
+
+<h3 class="sub" id="t6-spss">Introduction to SPSS</h3>
+<div class="block source"><span class="label">Source Material</span>
+SPSS (Statistical Package for the Social Sciences) was originally developed for social science research but is now used across many disciplines. It provides tools for data entry, data management, statistical analysis, report generation, and data visualization, popular for its graphical interface requiring no extensive programming knowledge.
+</div>
+
+<h3 class="sub" id="t6-views">Data View vs Variable View</h3>
+<table><thead><tr><th>Data View</th><th>Variable View</th></tr></thead><tbody>
+<tr><td>Spreadsheet-like entry screen; each row = a case/observation, each column = a variable</td><td>Defines variable properties: name, data type, width, decimal places, labels, missing values, measurement scale</td></tr>
+</tbody></table>
+<p class="note">Coding assigns numerical values to categories, e.g. Gender: Male = 1, Female = 2.</p>
+
+<h3 class="sub" id="t6-analysis">The Data Analysis Process</h3>
+<div class="anim" id="anim-spss">
+<div class="anim-head">Live Animation</div>
+<div class="anim-title">From raw data to interpreted results</div>
+<div class="anim-stage"></div>
+<div class="anim-controls"><button data-play>▶ Play</button><button data-step>⏭ Step</button><button data-reset>↺ Reset</button></div>
+<p class="anim-note"></p>
+</div>
+
+<h3 class="sub" id="t6-descinf">Descriptive vs Inferential Statistics</h3>
+<table><thead><tr><th>Descriptive Statistics</th><th>Inferential Statistics</th></tr></thead><tbody>
+<tr><td>Summarizes/describes data: Mean, Median, Mode, Range, Standard Deviation</td><td>Uses sample data to draw conclusions about a population: Hypothesis Testing, t-Test, ANOVA, Chi-Square Test, Correlation Analysis</td></tr>
+</tbody></table>
+
+<div class="revision"><span class="label">Quick Revision</span>
+SPSS: Data View (cases × variables, spreadsheet-like) vs Variable View (defines each variable's properties). Process: Data Entry & Coding → Cleaning & Validation → Descriptive Statistics → Inferential Statistics → Interpretation. Descriptive summarizes a sample; Inferential generalizes to a population.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Differentiate between Data View and Variable View in SPSS.</summary><div class="ans">
+<strong>Answer:</strong> Data View resembles a spreadsheet where actual data values are entered — each row is a case/observation, each column a variable. Variable View instead defines each variable's characteristics: name, data type, width, decimal places, labels, missing values, and measurement scale.
+<div class="ref">Study Guide Reference: <a href="#t6-views">Topic 6 → Data View vs Variable View</a></div></div></details>
+
+<details class="qa"><summary>Differentiate between Descriptive and Inferential Statistics, with two examples of each.</summary><div class="ans">
+<strong>Answer:</strong> Descriptive statistics summarize and describe the characteristics of the data itself — e.g. Mean and Standard Deviation. Inferential statistics use sample data to draw conclusions about a larger population — e.g. t-Test and ANOVA.
+<div class="ref">Study Guide Reference: <a href="#t6-descinf">Topic 6 → Descriptive vs Inferential Statistics</a></div></div></details>
+
+<details class="qa"><summary>What is "coding" in SPSS data entry? Give an example.</summary><div class="ans">
+<strong>Answer:</strong> Coding is the assignment of numerical values to categorical data to simplify processing and statistical analysis — e.g. coding Gender as Male = 1, Female = 2. Accurate coding ensures reliable research results.
+<div class="ref">Study Guide Reference: <a href="#t6-views">Topic 6 → Data View vs Variable View</a></div></div></details>
+</section>
+
+<!-- T7 -->
+<section class="topic" id="t7">
+<span class="kicker">Topic 7</span>
+<h2>Internet and Cloud-Based Applications</h2>
+
+<h3 class="sub" id="t7-def">Cloud Computing</h3>
+<div class="block source"><span class="label">Source Material</span>
+Cloud computing is the delivery of computing services — storage, software, databases, networking, processing power — over the Internet, instead of on a local computer. It reduces infrastructure cost and increases accessibility. Providers include Google, Microsoft, and Amazon Web Services.
+</div>
+
+<h3 class="sub" id="t7-char">Characteristics of Cloud Computing</h3>
+<div class="anim" id="anim-cloud">
+<div class="anim-head">Live Animation</div>
+<div class="anim-title">Five defining characteristics of cloud computing</div>
+<div class="anim-stage"></div>
+<div class="anim-controls"><button data-play>▶ Play</button><button data-step>⏭ Step</button><button data-reset>↺ Reset</button></div>
+<p class="anim-note"></p>
+</div>
+
+<h3 class="sub" id="t7-models">Cloud Service Models</h3>
+<table><thead><tr><th>Model</th><th>Provides</th><th>Examples</th></tr></thead><tbody>
+<tr><td>SaaS</td><td>Ready-to-use software via the Internet</td><td>Google Docs, Gmail, Microsoft 365, Zoom</td></tr>
+<tr><td>PaaS</td><td>Development platforms/tools for developers</td><td>Google App Engine, Azure App Services, Heroku</td></tr>
+<tr><td>IaaS</td><td>Virtualized computing resources (servers, storage, networking)</td><td>Amazon EC2, Google Compute Engine, Azure VMs</td></tr>
+</tbody></table>
+
+<h3 class="sub" id="t7-suites">Google Workspace vs Microsoft 365</h3>
+<table><thead><tr><th>Google Workspace</th><th>Microsoft 365</th></tr></thead><tbody>
+<tr><td>Docs, Sheets, Slides, Drive, Meet, Forms</td><td>Word, Excel, PowerPoint, Outlook, Teams, OneDrive</td></tr>
+<tr><td>Cloud-native from the start; real-time simultaneous editing</td><td>Traditional Office apps combined with cloud services</td></tr>
+</tbody></table>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Cloud computing = on-demand computing over the Internet, with 5 traits (on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service). Three service models: SaaS (software), PaaS (platform), IaaS (infrastructure). Google Workspace and Microsoft 365 are the two dominant productivity suites.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Define Cloud Computing and list its five characteristics.</summary><div class="ans">
+<strong>Answer:</strong> Cloud computing is the delivery of computing services (storage, software, databases, networking, processing) over the Internet rather than from a local computer. Its five characteristics: On-Demand Self-Service, Broad Network Access, Resource Pooling, Rapid Elasticity, and Measured Service.
+<div class="ref">Study Guide Reference: <a href="#t7-def">Topic 7 → Cloud Computing</a>, <a href="#t7-char">Characteristics</a></div></div></details>
+
+<details class="qa"><summary>Differentiate between SaaS, PaaS, and IaaS, with an example of each.</summary><div class="ans">
+<strong>Answer:</strong> SaaS delivers ready-to-use software over the Internet (e.g. Google Docs). PaaS provides a development platform for building/testing/deploying applications (e.g. Google App Engine). IaaS provides virtualized infrastructure — servers, storage, networking (e.g. Amazon EC2).
+<div class="ref">Study Guide Reference: <a href="#t7-models">Topic 7 → Cloud Service Models</a></div></div></details>
+
+<details class="qa"><summary>Name four Google Workspace applications and their Microsoft 365 equivalents.</summary><div class="ans">
+<strong>Answer:</strong> Google Docs ↔ Word, Google Sheets ↔ Excel, Google Slides ↔ PowerPoint, Google Meet ↔ Teams.
+<div class="ref">Study Guide Reference: <a href="#t7-suites">Topic 7 → Google Workspace vs Microsoft 365</a></div></div></details>
+</section>
+
+<!-- T8 -->
+<section class="topic" id="t8">
+<span class="kicker">Topic 8</span>
+<h2>Graphics and Multimedia Applications</h2>
+
+<h3 class="sub" id="t8-def">Introduction &amp; Design Principles</h3>
+<div class="block source"><span class="label">Source Material</span>
+Graphics applications create, edit, and manipulate visual content used in advertising, education, entertainment, publishing, and digital marketing. Graphic design principles: Balance, Alignment, Contrast, Repetition, Proximity, White Space.
+</div>
+
+<h3 class="sub" id="t8-vsraster">Photoshop vs CorelDRAW</h3>
+<table><thead><tr><th>Adobe Photoshop</th><th>CorelDRAW</th></tr></thead><tbody>
+<tr><td><strong>Raster</strong> graphics editor — works with pixels</td><td><strong>Vector</strong> graphics application — works with mathematical paths</td></tr>
+<tr><td>Loses quality when resized significantly</td><td>Can be resized without losing quality</td></tr>
+<tr><td>Photo editing, image enhancement, retouching, digital painting</td><td>Logo design, banners, signage, business cards, brochures</td></tr>
+<tr><td>Key concepts: Layers, Selection Tools, Filters, Brushes, Adjustment Tools</td><td>Key features: Vector Drawing Tools, Text Tools, Colour Management, Object Manipulation</td></tr>
+</tbody></table>
+
+<h3 class="sub" id="t8-edit">Image Editing vs Image Manipulation</h3>
+<p><strong>Editing:</strong> cropping, resizing, colour correction, background removal, retouching, noise reduction — improving quality. <strong>Manipulation:</strong> more advanced alterations that may significantly transform the original image.</p>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Photoshop = raster (pixels, loses quality when resized); CorelDRAW = vector (paths, scales without loss). Six design principles: Balance, Alignment, Contrast, Repetition, Proximity, White Space. Editing improves an image; Manipulation transforms it.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Differentiate between raster graphics (Photoshop) and vector graphics (CorelDRAW).</summary><div class="ans">
+<strong>Answer:</strong> Photoshop is a raster graphics editor that works with pixels, so images lose quality when resized significantly. CorelDRAW is a vector graphics application that uses mathematical paths, allowing graphics to be resized without losing quality — making it well suited to logos, banners and signage.
+<div class="ref">Study Guide Reference: <a href="#t8-vsraster">Topic 8 → Photoshop vs CorelDRAW</a></div></div></details>
+
+<details class="qa"><summary>List the six principles of graphic design.</summary><div class="ans">
+<strong>Answer:</strong> Balance, Alignment, Contrast, Repetition, Proximity, White Space.
+<div class="ref">Study Guide Reference: <a href="#t8-def">Topic 8 → Introduction &amp; Design Principles</a></div></div></details>
+
+<details class="qa"><summary>Distinguish between image editing and image manipulation.</summary><div class="ans">
+<strong>Answer:</strong> Image editing involves modifying an image to improve quality or achieve a desired effect (cropping, resizing, colour correction, retouching). Image manipulation refers to more advanced alterations that may significantly transform the original image.
+<div class="ref">Study Guide Reference: <a href="#t8-edit">Topic 8 → Image Editing vs Image Manipulation</a></div></div></details>
+</section>
+
+<!-- T9 -->
+<section class="topic" id="t9">
+<span class="kicker">Topic 9</span>
+<h2>Application Integration</h2>
+
+<h3 class="sub" id="t9-def">Introduction &amp; Data Import/Export</h3>
+<div class="block source"><span class="label">Source Material</span>
+Application integration enables different software applications to communicate, exchange data, and work together, preventing duplicated or inconsistent information. Common file formats for import/export: CSV, XLSX, DOCX, PDF, XML, JSON.
+</div>
+
+<h3 class="sub" id="t9-ole">Linking vs Embedding (OLE)</h3>
+<table><thead><tr><th>Linking</th><th>Embedding</th></tr></thead><tbody>
+<tr><td>Object stays connected to the original source file; updates automatically when the source changes</td><td>Object becomes part of the destination document, independent of the original file</td></tr>
+</tbody></table>
+<p class="note">Example: an Excel chart inserted into a Word document can be either linked or embedded.</p>
+
+<h3 class="sub" id="t9-integration">Office Application Integration</h3>
+<table><thead><tr><th>Pairing</th><th>Use</th></tr></thead><tbody>
+<tr><td>Word + Excel</td><td>Insert Excel tables/charts into Word reports</td></tr>
+<tr><td>Access + Excel</td><td>Export Access data to Excel for analysis</td></tr>
+<tr><td>Access + Word</td><td>Use database information for mail merge</td></tr>
+<tr><td>Excel + PowerPoint</td><td>Insert charts/results into slides</td></tr>
+<tr><td>Access + PowerPoint</td><td>Incorporate database reports into presentations</td></tr>
+</tbody></table>
+
+<h3 class="sub" id="t9-auto">Automated Reporting Systems</h3>
+<p>Systems that collect data, process it, and generate reports automatically with minimal human intervention. Benefits: improved accuracy, time savings, reduced workload, consistent reporting — common in banking, healthcare, education, manufacturing, government.</p>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Integration = apps exchanging data (CSV, XLSX, DOCX, PDF, XML, JSON). Linking = stays connected to source, auto-updates; Embedding = becomes independent of source. Office apps integrate in pairs (Word+Excel, Access+Word for mail merge, etc.). Automated reporting = minimal-intervention, rule-based report generation.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>Differentiate between Linking and Embedding an object (OLE).</summary><div class="ans">
+<strong>Answer:</strong> A linked object remains connected to its original source file — changes to the source automatically update the linked copy. An embedded object becomes part of the destination document and is independent of the original file, so later changes to the source do not affect it.
+<div class="ref">Study Guide Reference: <a href="#t9-ole">Topic 9 → Linking vs Embedding</a></div></div></details>
+
+<details class="qa"><summary>Give three examples of how Microsoft Office applications integrate with one another.</summary><div class="ans">
+<strong>Answer:</strong> Excel tables/charts inserted into Word reports; Access database information used for a Word mail merge; Excel charts and analytical results inserted into PowerPoint slides.
+<div class="ref">Study Guide Reference: <a href="#t9-integration">Topic 9 → Office Application Integration</a></div></div></details>
+
+<details class="qa"><summary>What is an Automated Reporting System, and what are its benefits?</summary><div class="ans">
+<strong>Answer:</strong> A system that collects data, processes it, and generates reports automatically according to predefined rules, with minimal human intervention. Benefits: improved accuracy, time savings, reduced workload, and consistent reporting.
+<div class="ref">Study Guide Reference: <a href="#t9-auto">Topic 9 → Automated Reporting Systems</a></div></div></details>
+</section>
+
+<!-- T10 -->
+<section class="topic" id="t10">
+<span class="kicker">Topic 10</span>
+<h2>Emerging Trends in Application Packages</h2>
+
+<h3 class="sub" id="t10-ai">AI and Mobile Productivity</h3>
+<div class="block source"><span class="label">Source Material</span>
+Mobile productivity apps (Mobile Word, Mobile Excel, Notion, Evernote) support work-from-anywhere use. Artificial Intelligence enables systems to analyse data, recognise patterns, generate content, automate tasks, and support decision-making — e.g. AI writing assistants, intelligent spreadsheets, chatbots, automated design tools.
+</div>
+
+<h3 class="sub" id="t10-bi">Business Intelligence &amp; Enterprise Applications</h3>
+<table><thead><tr><th>Category</th><th>Examples / Components</th></tr></thead><tbody>
+<tr><td>Business Intelligence (BI) tools</td><td>Microsoft Power BI, Tableau, Qlik Sense — dashboards, reports, visualisations</td></tr>
+<tr><td>Enterprise Applications</td><td>ERP (resource planning), CRM (customer relationships), HRMS (human resources), Supply Chain Management</td></tr>
+</tbody></table>
+
+<h3 class="sub" id="t10-cloudnative">Cloud-Native Applications &amp; IoT</h3>
+<p><strong>Cloud-native apps</strong> are built specifically to exploit scalability, flexibility, reliability, and automated deployment in cloud environments. <strong>IoT integration</strong> connects physical devices to the Internet — smart homes, smart healthcare, smart transportation, industrial automation.</p>
+
+<h3 class="sub" id="t10-future">Future Trends</h3>
+<ul>
+<li>Artificial Intelligence &amp; Machine Learning integration</li>
+<li>Augmented Reality (AR) and Virtual Reality (VR)</li>
+<li>Blockchain-based applications</li>
+<li>Advanced cybersecurity solutions</li>
+<li>Predictive analytics</li>
+<li>Low-code and no-code development platforms</li>
+</ul>
+
+<div class="revision"><span class="label">Quick Revision</span>
+Emerging trends: mobile productivity, AI integration, BI tools (Power BI, Tableau), enterprise apps (ERP/CRM/HRMS/SCM), cloud-native design, IoT integration. Future: AR/VR, blockchain, predictive analytics, low-code/no-code platforms.
+</div>
+
+<h3 class="sub">Likely Exam Questions <span class="tag likely">Likely</span></h3>
+<details class="qa"><summary>What is Business Intelligence software, and name two examples.</summary><div class="ans">
+<strong>Answer:</strong> Business Intelligence (BI) software transforms raw data into meaningful information for decision-making, helping organisations identify trends, opportunities and challenges through dashboards, reports and visualisations. Examples: Microsoft Power BI, Tableau.
+<div class="ref">Study Guide Reference: <a href="#t10-bi">Topic 10 → Business Intelligence &amp; Enterprise Applications</a></div></div></details>
+
+<details class="qa"><summary>List four types of Enterprise Applications.</summary><div class="ans">
+<strong>Answer:</strong> ERP (Enterprise Resource Planning), CRM (Customer Relationship Management), HRMS (Human Resource Management Systems), and Supply Chain Management Systems.
+<div class="ref">Study Guide Reference: <a href="#t10-bi">Topic 10 → Business Intelligence &amp; Enterprise Applications</a></div></div></details>
+
+<details class="qa"><summary>Outline four future trends expected in application software.</summary><div class="ans">
+<strong>Answer:</strong> Any four of: AI/machine learning integration, Augmented Reality (AR), Virtual Reality (VR), blockchain-based applications, advanced cybersecurity solutions, predictive analytics, low-code/no-code development platforms.
+<div class="ref">Study Guide Reference: <a href="#t10-future">Topic 10 → Future Trends</a></div></div></details>
+</section>
+
+<!-- BANK -->
+<section class="topic" id="bank">
+<span class="kicker">Consolidated</span>
+<h2>Final Exam Question Bank</h2>
+<p class="note">Every question below already appears with its full answer under its topic. Tap a question to jump straight to it.</p>
+<div class="bank">
+<h4>Topic 1 — Introduction</h4>
+<ol><li><a href="#t1-def">Define Application Packages vs System Software</a></li><li><a href="#t1-char">List five characteristics of application packages</a></li><li><a href="#t1-class">Classify application packages with examples</a></li></ol>
+<h4>Topic 2 — Word Processing</h4>
+<ol><li><a href="#t2-merge">Explain Mail Merge and its components</a></li><li><a href="#t2-format">Differentiate Character/Paragraph/Page formatting</a></li><li><a href="#t2-report">Outline the standard report structure</a></li></ol>
+<h4>Topic 3 — Spreadsheet</h4>
+<ol><li><a href="#t3-formula">Differentiate a formula from a function</a></li><li><a href="#t3-tools">Explain Pivot Tables and What-If Analysis</a></li><li><a href="#t3-comp">List the components of the Excel environment</a></li></ol>
+<h4>Topic 4 — Presentation Packages</h4>
+<ol><li><a href="#t4-anim">Differentiate Animation from Transition</a></li><li><a href="#t4-design">State and explain slide design principles</a></li><li><a href="#t4-create">Outline the steps of creating a presentation</a></li></ol>
+<h4>Topic 5 — Database Management</h4>
+<ol><li><a href="#t5-dbms">Define a DBMS and its functions</a></li><li><a href="#t5-comp">Differentiate Record from Field; explain Primary Key</a></li><li><a href="#t5-access">List Microsoft Access's five objects</a></li></ol>
+<h4>Topic 6 — Statistical Packages / SPSS</h4>
+<ol><li><a href="#t6-views">Differentiate Data View from Variable View</a></li><li><a href="#t6-descinf">Differentiate Descriptive from Inferential Statistics</a></li><li><a href="#t6-views">Explain "coding" in SPSS</a></li></ol>
+<h4>Topic 7 — Internet &amp; Cloud</h4>
+<ol><li><a href="#t7-char">Define Cloud Computing and its five characteristics</a></li><li><a href="#t7-models">Differentiate SaaS, PaaS, IaaS</a></li><li><a href="#t7-suites">Google Workspace vs Microsoft 365 equivalents</a></li></ol>
+<h4>Topic 8 — Graphics &amp; Multimedia</h4>
+<ol><li><a href="#t8-vsraster">Differentiate raster (Photoshop) from vector (CorelDRAW)</a></li><li><a href="#t8-def">List the six principles of graphic design</a></li><li><a href="#t8-edit">Distinguish image editing from image manipulation</a></li></ol>
+<h4>Topic 9 — Application Integration</h4>
+<ol><li><a href="#t9-ole">Differentiate Linking from Embedding (OLE)</a></li><li><a href="#t9-integration">Give examples of Office application integration</a></li><li><a href="#t9-auto">Define Automated Reporting Systems and their benefits</a></li></ol>
+<h4>Topic 10 — Emerging Trends</h4>
+<ol><li><a href="#t10-bi">Define Business Intelligence software with examples</a></li><li><a href="#t10-bi">List four types of Enterprise Applications</a></li><li><a href="#t10-future">Outline four future trends in application software</a></li></ol>
+</div>
+</section>
+</main>
+
+<footer>
+Built from your CSC 424 course outline and lecture note document (Application Packages, 400 Level, Dr Ogbeide O.I.). Source-Material boxes preserve the note's own wording; Plain-English boxes and likely exam questions are added study aids, not lecturer content, and are not guaranteed to appear in any exam.
+<div class="brandfoot">Compiled by <strong>APEXHUB</strong> — your one stop for all academic needs and more</div>
+</footer>
+
+<button id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+(function(){
+  var themeBtn = document.getElementById('themeBtn');
+  try {
+    var saved = localStorage.getItem('csc424-theme');
+    if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved);
+  } catch(e){}
+  themeBtn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    var mqDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var effectiveDark = cur ? cur === 'dark' : mqDark;
+    var next = effectiveDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('csc424-theme', next); } catch(e){}
+  });
+
+  var toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', function(){ toTop.classList.toggle('show', window.scrollY > 500); });
+  toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+  function makeFlow(id, steps, opts){
+    opts = opts || {};
+    var root = document.getElementById(id);
+    if(!root) return;
+    var stage = root.querySelector('.anim-stage');
+    var note = root.querySelector('.anim-note');
+    stage.innerHTML = steps.map(function(s,i){
+      return '<div class="flow-node" data-i="'+i+'">'+s.label+'</div>' +
+        (i < steps.length - 1 ? '<div class="flow-arrow">'+(opts.arrow||'→')+'</div>' : '');
+    }).join('');
+    var nodes = Array.prototype.slice.call(stage.querySelectorAll('.flow-node'));
+    var idx = -1, timer = null;
+    var playBtn = root.querySelector('[data-play]');
+    function show(i){
+      nodes.forEach(function(n, ni){
+        n.classList.toggle('active', ni === i);
+        n.classList.toggle('done', !opts.loop && ni < i);
+      });
+      note.textContent = steps[i] ? steps[i].note : '';
+    }
+    function pause(){ if(timer){ clearInterval(timer); timer = null; } playBtn.textContent = '▶ Play'; }
+    function step(){
+      idx++;
+      if(idx >= steps.length){
+        if(opts.loop){ idx = 0; } else { idx = steps.length - 1; pause(); return; }
+      }
+      show(idx);
+    }
+    playBtn.addEventListener('click', function(){
+      if(timer){ pause(); return; }
+      playBtn.textContent = '⏸ Pause';
+      timer = setInterval(step, opts.speed || 1500);
+      step();
+    });
+    root.querySelector('[data-step]').addEventListener('click', function(){ pause(); step(); });
+    root.querySelector('[data-reset]').addEventListener('click', function(){
+      pause(); idx = -1;
+      nodes.forEach(function(n){ n.classList.remove('active','done'); });
+      note.textContent = opts.introNote || '';
+    });
+    note.textContent = opts.introNote || '';
+  }
+
+  makeFlow('anim-install', [
+    {label:'Obtain the Software', note:'Purchase, download, or otherwise acquire the installation package.'},
+    {label:'Check System Requirements', note:'Confirm the computer meets the minimum hardware/OS requirements.'},
+    {label:'Run the Setup Program', note:'Launch the installer to begin the process.'},
+    {label:'Accept License Agreements', note:'Agree to the software\u2019s terms of use.'},
+    {label:'Select Installation Options', note:'Choose install location, components, and preferences.'},
+    {label:'Complete Setup', note:'Finish and launch the newly installed application.'}
+  ], {introNote:'Press ▶ Play to walk through installing an application package.'});
+
+  makeFlow('anim-report', [
+    {label:'Title Page', note:'States the report title, author, and date.'},
+    {label:'Abstract', note:'A brief summary of the entire report.'},
+    {label:'Table of Contents', note:'Lists sections and page numbers.'},
+    {label:'Introduction', note:'Introduces the topic and objectives.'},
+    {label:'Main Body', note:'Contains the key points, explanations and supporting information.'},
+    {label:'Conclusion', note:'Summarises major points and recommendations.'},
+    {label:'References', note:'Lists all cited sources.'},
+    {label:'Appendices', note:'Supplementary material referenced in the report.'}
+  ], {introNote:'The standard structure of a professional report. Press ▶ Play.'});
+
+  makeFlow('anim-functions', [
+    {label:'SUM()', note:'Adds numbers together. Example: =SUM(A1:A10)'},
+    {label:'AVERAGE()', note:'Calculates the mean value. Example: =AVERAGE(A1:A10)'},
+    {label:'MAX()', note:'Returns the largest value. Example: =MAX(A1:A10)'},
+    {label:'MIN()', note:'Returns the smallest value. Example: =MIN(A1:A10)'},
+    {label:'COUNT()', note:'Counts numerical entries. Example: =COUNT(A1:A10)'},
+    {label:'IF()', note:'Performs logical testing. Example: =IF(A1>=50,"Pass","Fail")'}
+  ], {introNote:'Six commonly used Excel functions. Press ▶ Play to step through each.'});
+
+  makeFlow('anim-present', [
+    {label:'Identify Purpose & Audience', note:'Understand what the presentation must achieve and for whom.'},
+    {label:'Gather & Organize Information', note:'Collect and structure the relevant content.'},
+    {label:'Create & Arrange Slides', note:'Build slides in a logical sequence.'},
+    {label:'Introduction', note:'Introduces the topic and outlines the objectives.'},
+    {label:'Main Body', note:'Delivers key points, explanations, supporting information.'},
+    {label:'Conclusion', note:'Summarises major points; gives recommendations or closing remarks.'}
+  ], {introNote:'Steps to building an effective presentation. Press ▶ Play.'});
+
+  makeFlow('anim-dbdesign', [
+    {label:'Requirement Analysis', note:'Determine the information needs of users.'},
+    {label:'Table Design', note:'Create tables to store the data.'},
+    {label:'Field Definition', note:'Define the attributes and data types of each field.'},
+    {label:'Relationship Design', note:'Establish relationships among tables.'},
+    {label:'Data Entry', note:'Populate the database with information.'}
+  ], {introNote:'The database design process. Press ▶ Play.'});
+
+  makeFlow('anim-spss', [
+    {label:'Data Entry & Coding', note:'Collected information is entered; categories are assigned numeric codes.'},
+    {label:'Data Cleaning & Validation', note:'Errors such as missing values, duplicates, and inconsistent coding are corrected.'},
+    {label:'Descriptive Statistics', note:'Mean, median, mode, range and standard deviation summarise the data.'},
+    {label:'Inferential Statistics', note:'t-Tests, ANOVA, Chi-Square and correlation generalise findings to a population.'},
+    {label:'Interpretation', note:'Numerical outputs are explained in relation to the research objectives.'}
+  ], {introNote:'From raw data to interpreted results. Press ▶ Play.'});
+
+  makeFlow('anim-cloud', [
+    {label:'On-Demand Self-Service', note:'Users access resources whenever needed, without direct provider interaction.'},
+    {label:'Broad Network Access', note:'Services reachable from computers, tablets, and smartphones.'},
+    {label:'Resource Pooling', note:'Providers share computing resources among multiple users, maintaining privacy and security.'},
+    {label:'Rapid Elasticity', note:'Resources scale up or down based on demand.'},
+    {label:'Measured Service', note:'Users pay only for the resources they actually consume.'}
+  ], {introNote:'The five defining characteristics of cloud computing. Press ▶ Play.'});
+
+  var search = document.getElementById('search');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.topic'));
+  var allMarks = [];
+  function clearMarks(){
+    allMarks.forEach(function(m){
+      var parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+    allMarks = [];
+  }
+  function walkAndMark(node, needle){
+    if (node.nodeType === 3){
+      var text = node.textContent;
+      var lower = text.toLowerCase();
+      var idx = lower.indexOf(needle);
+      if (idx > -1){
+        var frag = document.createDocumentFragment();
+        var last = 0, i;
+        while ((i = lower.indexOf(needle, last)) > -1){
+          frag.appendChild(document.createTextNode(text.slice(last, i)));
+          var mk = document.createElement('mark');
+          mk.textContent = text.slice(i, i + needle.length);
+          frag.appendChild(mk);
+          allMarks.push(mk);
+          last = i + needle.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(frag, node);
+      }
+    } else if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE'){
+      Array.prototype.slice.call(node.childNodes).forEach(function(c){ walkAndMark(c, needle); });
+    }
+  }
+  search.addEventListener('input', function(){
+    clearMarks();
+    var q = search.value.trim().toLowerCase();
+    sections.forEach(function(sec){
+      if (!q){ sec.classList.remove('hidden'); return; }
+      var text = sec.textContent.toLowerCase();
+      var match = text.indexOf(q) > -1;
+      sec.classList.toggle('hidden', !match);
+      if (match) walkAndMark(sec, q);
+    });
+    if (q){
+      var firstMark = document.querySelector('mark');
+      if (firstMark){
+        var anc = firstMark.parentElement;
+        while (anc){ if (anc.tagName === 'DETAILS') anc.open = true; anc = anc.parentElement; }
+        firstMark.scrollIntoView({behavior:'smooth', block:'center'});
+      } else {
+        sections.forEach(function(sec){ sec.classList.add('hidden'); });
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
